@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0f172a;
+  --muted: #64748b;
+  --surface: #f8fafc;
+  --line: #e2e8f0;
+  --accent: #0ea5e9;
+  --accent-deep: #0369a1;
+  --danger: #dc2626;
+  --ok: #059669;
+  --panel: #ffffff;
+  --glow: #bae6fd;
+  --sans: "IBM Plex Sans", "Noto Sans KR", system-ui, sans-serif;
+  --display: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, var(--glow), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, #e0f2fe, transparent 50%),
+    linear-gradient(180deg, #f1f5f9 0%, var(--surface) 40%, #eef2ff 100%);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+* {
+  box-sizing: border-box;
+}
