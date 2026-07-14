@@ -7,8 +7,8 @@ const PRICING: Record<
   { input: number; output: number }
 > = {
   'gpt-4o-mini': { input: 0.15, output: 0.6 },
-  'gemini-2.0-flash': { input: 0.1, output: 0.4 },
-  'claude-3-5-haiku-latest': { input: 0.8, output: 4.0 },
+  'gemini-2.5-flash': { input: 0.3, output: 2.5 },
+  'claude-haiku-4-5': { input: 1.0, output: 5.0 },
   sonar: { input: 1.0, output: 1.0 },
 }
 

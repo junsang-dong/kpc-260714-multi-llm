@@ -76,8 +76,8 @@ PERPLEXITY_API_KEY=
 | Provider   | Model                     |
 | ---------- | ------------------------- |
 | GPT        | `gpt-4o-mini`             |
-| Gemini     | `gemini-2.0-flash`        |
-| Claude     | `claude-3-5-haiku-latest` |
+| Gemini     | `gemini-2.5-flash`        |
+| Claude     | `claude-haiku-4-5`        |
 | Perplexity | `sonar`                   |
 
 ## 배포

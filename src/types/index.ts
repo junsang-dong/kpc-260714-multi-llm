@@ -34,7 +34,7 @@ export const PROVIDER_LABELS: Record<ProviderId, string> = {
 
 export const DEFAULT_MODELS: Record<ProviderId, string> = {
   gpt: 'gpt-4o-mini',
-  gemini: 'gemini-2.0-flash',
-  claude: 'claude-3-5-haiku-latest',
+  gemini: 'gemini-2.5-flash',
+  claude: 'claude-haiku-4-5',
   perplexity: 'sonar',
 }
