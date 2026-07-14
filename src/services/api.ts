@@ -1,7 +1,17 @@
 import type { ChatResult, CompareItem, ProviderId } from '../types'
 
 async function parseJson<T>(res: Response): Promise<T> {
-  const data = await res.json()
+  const text = await res.text()
+  let data: unknown
+
+  try {
+    data = text ? JSON.parse(text) : null
+  } catch {
+    throw new Error(
+      text.trim().slice(0, 200) || `HTTP ${res.status}: invalid response`,
+    )
+  }
+
   if (!res.ok) {
     const message =
       typeof data === 'object' && data && 'error' in data
@@ -9,6 +19,7 @@ async function parseJson<T>(res: Response): Promise<T> {
         : `HTTP ${res.status}`
     throw new Error(message)
   }
+
   return data as T
 }
 

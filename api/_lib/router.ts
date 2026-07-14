@@ -1,9 +1,9 @@
-import type { ChatResult, ProviderId } from './types'
-import { DEFAULT_MODELS } from './types'
-import { callOpenAI } from './providers/openai'
-import { callGemini } from './providers/gemini'
-import { callAnthropic } from './providers/anthropic'
-import { callPerplexity } from './providers/perplexity'
+import type { ChatResult, ProviderId } from './types.js'
+import { DEFAULT_MODELS } from './types.js'
+import { callOpenAI } from './providers/openai.js'
+import { callGemini } from './providers/gemini.js'
+import { callAnthropic } from './providers/anthropic.js'
+import { callPerplexity } from './providers/perplexity.js'
 
 const adapters: Record<
   ProviderId,

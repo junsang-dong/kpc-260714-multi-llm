@@ -1,5 +1,5 @@
-import type { ChatResult, ProviderId } from '../types'
-import { estimateCost, modelFor } from '../pricing'
+import type { ChatResult, ProviderId } from '../types.js'
+import { estimateCost, modelFor } from '../pricing.js'
 
 export async function callAnthropic(
   prompt: string,

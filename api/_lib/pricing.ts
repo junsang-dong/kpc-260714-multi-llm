@@ -1,5 +1,5 @@
-import type { ProviderId } from './types'
-import { DEFAULT_MODELS } from './types'
+import type { ProviderId } from './types.js'
+import { DEFAULT_MODELS } from './types.js'
 
 /** USD per 1M tokens */
 const PRICING: Record<

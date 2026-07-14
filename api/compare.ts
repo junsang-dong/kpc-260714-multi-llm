@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import type { CompareItem, ProviderId } from './_lib/types'
-import { DEFAULT_MODELS, PROVIDERS } from './_lib/types'
-import { routeChat } from './_lib/router'
+import type { CompareItem, ProviderId } from './_lib/types.js'
+import { DEFAULT_MODELS, PROVIDERS } from './_lib/types.js'
+import { routeChat } from './_lib/router.js'
 
 async function callOne(provider: ProviderId, prompt: string): Promise<CompareItem> {
   const started = Date.now()
@@ -22,40 +22,46 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
 ) {
-  if (req.method === 'OPTIONS') {
-    res.status(204).end()
-    return
-  }
-
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' })
-    return
-  }
-
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
-  const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : ''
-
-  if (!prompt) {
-    res.status(400).json({ error: 'prompt is required' })
-    return
-  }
-
-  const settled = await Promise.allSettled(
-    PROVIDERS.map((provider) => callOne(provider, prompt)),
-  )
-
-  const results: CompareItem[] = settled.map((item, index) => {
-    if (item.status === 'fulfilled') {
-      return item.value
+  try {
+    if (req.method === 'OPTIONS') {
+      res.status(204).end()
+      return
     }
-    const provider = PROVIDERS[index]
-    return {
-      provider,
-      model: DEFAULT_MODELS[provider],
-      error: item.reason instanceof Error ? item.reason.message : 'Unknown error',
-      elapsed: 0,
-    }
-  })
 
-  res.status(200).json(results)
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'Method not allowed' })
+      return
+    }
+
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+    const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : ''
+
+    if (!prompt) {
+      res.status(400).json({ error: 'prompt is required' })
+      return
+    }
+
+    const settled = await Promise.allSettled(
+      PROVIDERS.map((provider) => callOne(provider, prompt)),
+    )
+
+    const results: CompareItem[] = settled.map((item, index) => {
+      if (item.status === 'fulfilled') {
+        return item.value
+      }
+      const provider = PROVIDERS[index]
+      return {
+        provider,
+        model: DEFAULT_MODELS[provider],
+        error:
+          item.reason instanceof Error ? item.reason.message : 'Unknown error',
+        elapsed: 0,
+      }
+    })
+
+    res.status(200).json(results)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    res.status(500).json({ error: message })
+  }
 }
