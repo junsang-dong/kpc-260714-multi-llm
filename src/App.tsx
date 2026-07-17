@@ -146,8 +146,24 @@ export default function App() {
         )}
       </main>
 
-      <footer className="mt-8 text-center text-xs text-[var(--muted)]">
-        API keys stay on the server · USD × 1400 ≈ KRW
+      <footer className="mt-8 space-y-1.5 text-center text-xs text-[var(--muted)]">
+        <p>API keys stay on the server · USD × 1400 ≈ KRW</p>
+        <p>
+          Developed by JUN ·{' '}
+          <a
+            href="https://nextplatform.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-[var(--line)] underline-offset-2 transition hover:text-[var(--accent-deep)] hover:decoration-[var(--accent)]"
+          >
+            NextPlatform
+          </a>{' '}
+          | React · Vite · TypeScript · Vercel
+        </p>
+        <p>
+          Built with Cursor · Claude Code · Codex · ChatGPT | Version 1.0.0 · ©
+          2026
+        </p>
       </footer>
     </div>
   )
