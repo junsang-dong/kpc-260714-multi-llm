@@ -15,7 +15,7 @@ export function PromptInput({
   onSubmit,
   disabled,
   locked,
-  placeholder = 'Explain RAG simply.',
+  placeholder = '바이브코딩 입문자를 위해 OKF의 개요, 특징, 활용 방법을 설명해주겠어?',
 }: PromptInputProps) {
   return (
     <div className="space-y-2">

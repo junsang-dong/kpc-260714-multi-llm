@@ -20,7 +20,9 @@ type Mode = 'chat' | 'compare'
 export default function App() {
   const [mode, setMode] = useState<Mode>('chat')
   const [provider, setProvider] = useState<ProviderId>('gpt')
-  const [prompt, setPrompt] = useState('Explain RAG simply.')
+  const [prompt, setPrompt] = useState(
+    '바이브코딩 입문자를 위해 OKF의 개요, 특징, 활용 방법을 설명해주겠어?',
+  )
   const [loading, setLoading] = useState(false)
   const [chatResult, setChatResult] = useState<ChatResult | null>(null)
   const [compareItems, setCompareItems] = useState<CompareItem[] | null>(null)
