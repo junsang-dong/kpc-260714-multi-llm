@@ -1,5 +1,7 @@
 # Multi LLM Router
 
+![Multi LLM Router 앱 화면](doc/app-preview.png)
+
 하나의 UI에서 GPT, Gemini, Claude, Perplexity를 선택하거나 비교할 수 있는 AI Gateway 학습용 앱입니다.
 
 ## 기술 스택
@@ -44,13 +46,13 @@ OPENAI_API_KEY=
 GOOGLE_API_KEY=
 ANTHROPIC_API_KEY=
 PERPLEXITY_API_KEY=
-VOUCHER_CODE=kpc0714
+VOUCHER_CODE=
 ```
 
 클라이언트 인증 UI용 (Vite `VITE_` prefix):
 
 ```
-VITE_VOUCHER_CODE=kpc0714
+VITE_VOUCHER_CODE=
 ```
 
 키가 없는 provider는 해당 요청만 에러를 반환하고, Compare 모드에서는 나머지 모델은 계속 호출됩니다.
@@ -63,20 +65,20 @@ VITE_VOUCHER_CODE=kpc0714
 - API: `voucher` 필드가 없거나 `VOUCHER_CODE`와 불일치하면 `401` 반환
 - 세션: 인증 상태는 `sessionStorage`에 유지되며, 「잠금」으로 해제 가능
 
-기본 코드: `kpc0714` (`.env`에서 변경 가능)
+바우처 코드는 `.env`의 `VOUCHER_CODE` / `VITE_VOUCHER_CODE`에서 설정합니다.
 
 ## API
 
 ### `POST /api/chat`
 
 ```json
-{ "provider": "gpt", "prompt": "Explain MCP", "voucher": "kpc0714" }
+{ "provider": "gpt", "prompt": "Explain MCP", "voucher": "<VOUCHER_CODE>" }
 ```
 
 ### `POST /api/compare`
 
 ```json
-{ "prompt": "Explain AI Agent.", "voucher": "kpc0714" }
+{ "prompt": "Explain AI Agent.", "voucher": "<VOUCHER_CODE>" }
 ```
 
 4개 provider를 병렬 호출하고 속도·토큰·추정 비용을 함께 반환합니다.
@@ -90,11 +92,13 @@ VITE_VOUCHER_CODE=kpc0714
 | Claude     | `claude-haiku-4-5` |
 | Perplexity | `sonar`            |
 
+![Compare 모드 결과 화면](doc/compare-preview.png)
+
 ## 변경 이력 (최근)
 
 ### 주요 내용
 
-- **바우처 게이트**: `kpc0714` 인증 후에만 프롬프트 실행 가능
+- **바우처 게이트**: 바우처 코드 인증 후에만 프롬프트 실행 가능
 - **서버 검증**: `/api/chat`, `/api/compare`(Vercel + Vite 로컬)에서 바우처 필수 검증
 - **로컬 포트**: 개발 서버 기본 포트를 `5181`로 변경 (`strictPort`)
 - **환경 변수**: `VOUCHER_CODE`, `VITE_VOUCHER_CODE` 추가 (`.env.example` 반영)
