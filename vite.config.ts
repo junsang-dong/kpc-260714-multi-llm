@@ -42,6 +42,9 @@ function localApiPlugin(): Plugin {
             PROVIDERS,
             DEFAULT_MODELS,
           } = await server.ssrLoadModule('/api/_lib/types.ts')
+          const { voucherError } = await server.ssrLoadModule(
+            '/api/_lib/voucher.ts',
+          )
 
           if (url === '/api/chat' && req.method === 'POST') {
             const provider = body?.provider
@@ -49,6 +52,14 @@ function localApiPlugin(): Plugin {
               typeof body?.prompt === 'string' ? body.prompt.trim() : ''
             const model =
               typeof body?.model === 'string' ? body.model : undefined
+            const voucherIssue = voucherError(body?.voucher)
+
+            if (voucherIssue) {
+              res.statusCode = 401
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: voucherIssue }))
+              return
+            }
 
             if (!isProviderId(provider)) {
               res.statusCode = 400
@@ -86,6 +97,15 @@ function localApiPlugin(): Plugin {
           if (url === '/api/compare' && req.method === 'POST') {
             const prompt =
               typeof body?.prompt === 'string' ? body.prompt.trim() : ''
+            const voucherIssue = voucherError(body?.voucher)
+
+            if (voucherIssue) {
+              res.statusCode = 401
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ error: voucherIssue }))
+              return
+            }
+
             if (!prompt) {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
@@ -137,7 +157,7 @@ function localApiPlugin(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), localApiPlugin()],
   server: {
-    port: 5151,
+    port: 5181,
     strictPort: true,
   },
 })

@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { CompareItem, ProviderId } from './_lib/types.js'
 import { DEFAULT_MODELS, PROVIDERS } from './_lib/types.js'
 import { routeChat } from './_lib/router.js'
+import { voucherError } from './_lib/voucher.js'
 
 async function callOne(provider: ProviderId, prompt: string): Promise<CompareItem> {
   const started = Date.now()
@@ -35,6 +36,12 @@ export default async function handler(
 
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
     const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : ''
+    const voucherIssue = voucherError(body?.voucher)
+
+    if (voucherIssue) {
+      res.status(401).json({ error: voucherIssue })
+      return
+    }
 
     if (!prompt) {
       res.status(400).json({ error: 'prompt is required' })

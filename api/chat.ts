@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { isProviderId, routeChat } from './_lib/router.js'
+import { voucherError } from './_lib/voucher.js'
 
 export default async function handler(
   req: VercelRequest,
@@ -20,6 +21,12 @@ export default async function handler(
     const provider = body?.provider
     const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : ''
     const model = typeof body?.model === 'string' ? body.model : undefined
+    const voucherIssue = voucherError(body?.voucher)
+
+    if (voucherIssue) {
+      res.status(401).json({ error: voucherIssue })
+      return
+    }
 
     if (!isProviderId(provider)) {
       res.status(400).json({

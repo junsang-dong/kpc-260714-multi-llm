@@ -4,7 +4,15 @@ import { ModelSelector } from './components/ModelSelector'
 import { PromptInput } from './components/PromptInput'
 import { ChatWindow } from './components/ChatWindow'
 import { CompareView } from './components/CompareView'
-import { chat, compare } from './services/api'
+import { VoucherGate } from './components/VoucherGate'
+import {
+  chat,
+  clearStoredVoucher,
+  compare,
+  getStoredVoucher,
+  isExpectedVoucher,
+  storeVoucher,
+} from './services/api'
 import type { ChatResult, CompareItem, ProviderId } from './types'
 
 type Mode = 'chat' | 'compare'
@@ -18,10 +26,27 @@ export default function App() {
   const [compareItems, setCompareItems] = useState<CompareItem[] | null>(null)
   const [comparePrompt, setComparePrompt] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [unlocked, setUnlocked] = useState(() => {
+    const stored = getStoredVoucher()
+    return Boolean(stored && isExpectedVoucher(stored))
+  })
+
+  function handleUnlock(code: string) {
+    if (!isExpectedVoucher(code)) return false
+    storeVoucher(code.trim())
+    setUnlocked(true)
+    setError(null)
+    return true
+  }
+
+  function handleLock() {
+    clearStoredVoucher()
+    setUnlocked(false)
+  }
 
   async function handleSubmit() {
     const trimmed = prompt.trim()
-    if (!trimmed || loading) return
+    if (!trimmed || loading || !unlocked) return
 
     setLoading(true)
     setError(null)
@@ -87,11 +112,17 @@ export default function App() {
       </div>
 
       <main className="space-y-6 rounded-[28px] border border-white/70 bg-white/55 p-5 shadow-[0_20px_60px_-40px_rgba(3,105,161,0.45)] backdrop-blur-sm sm:p-8">
+        <VoucherGate
+          unlocked={unlocked}
+          onUnlock={handleUnlock}
+          onLock={handleLock}
+        />
+
         {mode === 'chat' && (
           <ModelSelector
             value={provider}
             onChange={setProvider}
-            disabled={loading}
+            disabled={loading || !unlocked}
           />
         )}
 
@@ -99,7 +130,8 @@ export default function App() {
           value={prompt}
           onChange={setPrompt}
           onSubmit={handleSubmit}
-          disabled={loading}
+          disabled={loading || !unlocked}
+          locked={!unlocked}
         />
 
         {mode === 'chat' ? (

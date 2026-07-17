@@ -5,6 +5,7 @@ interface PromptInputProps {
   onChange: (value: string) => void
   onSubmit: () => void
   disabled?: boolean
+  locked?: boolean
   placeholder?: string
 }
 
@@ -13,6 +14,7 @@ export function PromptInput({
   onChange,
   onSubmit,
   disabled,
+  locked,
   placeholder = 'Explain RAG simply.',
 }: PromptInputProps) {
   return (
@@ -29,12 +31,14 @@ export function PromptInput({
           rows={4}
           value={value}
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={
+            locked ? '바우처 인증 후 프롬프트를 입력할 수 있습니다.' : placeholder
+          }
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
               e.preventDefault()
-              onSubmit()
+              if (!disabled) onSubmit()
             }
           }}
           className="w-full resize-y rounded-2xl border border-[var(--line)] bg-white/90 px-4 py-3 pr-14 text-base text-[var(--ink)] shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[var(--accent)] focus:ring-2 focus:ring-sky-200 disabled:opacity-60"
@@ -49,7 +53,11 @@ export function PromptInput({
           <Send size={18} />
         </button>
       </div>
-      <p className="text-xs text-[var(--muted)]">Ctrl/Cmd + Enter 로 전송</p>
+      <p className="text-xs text-[var(--muted)]">
+        {locked
+          ? '바우처 코드를 인증하면 전송할 수 있습니다'
+          : 'Ctrl/Cmd + Enter 로 전송'}
+      </p>
     </div>
   )
 }
